@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="Черновик" Height="450" Width="800" MinHeight="450" MinWidth="800">
+        Title="Черновик" Height="750" Width="1300" MinHeight="450" MinWidth="800">
     <Window.Resources>
-        <BitmapImage x:Key="df" UriSource="/image/picture.png"/>
+        <BitmapImage x:Key="df" UriSource="./image/picture.png"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -15,7 +15,6 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="130"/>
             <ColumnDefinition Width="5*"/>
@@ -35,21 +34,23 @@
 
 
         <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <Label Content="Сортировка " Margin="10,0,0,0" VerticalAlignment="Center"/>
+            <ComboBox Name="SortFilterComboBox" SelectedIndex="0" SelectionChanged="SortFilterComboBox_SelectionChanged" ItemsSource="{Binding FilterByDiscountNamesList}" />
             <Label Content="Цена: "/>
             <RadioButton GroupName="Price" Tag="1" Content="по возрастанию" IsChecked="True" Checked="RadioButton_Checked" VerticalContentAlignment="Center"/>
             <RadioButton GroupName="Price" Tag="2" Content="по убыванию"  Checked="RadioButton_Checked" VerticalContentAlignment="Center"/>
             <Label Content="Фильтр по материалам: " Margin="10,0,0,0" VerticalAlignment="Center"/>
             <ComboBox Name="DiscountFilterComboBox" SelectedIndex="0" SelectionChanged="DiscountFilterComboBox_SelectionChanged" ItemsSource="{Binding FilterByDiscountNamesList}" />
             <Label Content="Поиск: " Margin="10,0,0,0" VerticalAlignment="Center"/>
-            <TextBox x:Name="SearchTextBox" KeyUp="SearchTextBox_KeyUp" Width="200" TextChanged="Filter"/>
+            <TextBox x:Name="SearchTextBox" KeyUp="SearchTextBox_KeyUp" Width="200"/>
         </StackPanel>
         <DataGrid x:Name="MainDataGrid" Grid.Column="2" Grid.Row="2" CanUserAddRows="false" AutoGenerateColumns="False" CanUserSortColumns="False" CanUserDeleteRows="False" ItemsSource="{Binding MaterialList}">
             <DataGrid.Columns>
                 <DataGridTextColumn Width="200" Header="Название" Binding="{Binding Title}"/>
-                <DataGridTemplateColumn Width="70" Header="">
+                <DataGridTemplateColumn Width="100" Header="">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Height="64"  Width="64" Source="{Binding ImageUri}" />
+                            <Image Height="64"  Width="64" Source="{Binding ImageUri, TargetNullValue={StaticResource df}}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

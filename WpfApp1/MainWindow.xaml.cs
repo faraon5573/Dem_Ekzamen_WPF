@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WpfApp1.class_;
+using WpfApp1.page;
 
 namespace WpfApp1
 {
@@ -71,17 +72,21 @@ namespace WpfApp1
             this.DataContext = this;
             MaterialList = Core.DB.Material.ToList();
             InitializeComponent();
-            //DiscountFilterComboBox.ItemsSource = Core.DB.MaterialType.ToList();
-            //DiscountFilterComboBox.SelectedValuePath = "ID";
-            //DiscountFilterComboBox.DisplayMemberPath = "Title";
-            //lu1 = MaterialList;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void AddService_Click(object sender, RoutedEventArgs e)
         {
+            var NewMaterial = new Material();
 
+            var NewMaterialWindow = new MaterialWindow(NewMaterial);
+            if ((bool)NewMaterialWindow.ShowDialog())
+            {
+                MaterialList = Core.DB.Material.ToList();
+                PropertyChanged(this, new PropertyChangedEventArgs("FilteredProductsPrice"));
+                PropertyChanged(this, new PropertyChangedEventArgs("ProductsPrice"));
+            }
         }
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
@@ -127,42 +132,36 @@ namespace WpfApp1
         {
             SearchFilter = SearchTextBox.Text;
         }
-        private void Filter(object sender, RoutedEventArgs e)
-        {
-            //try
-            //{
-            //    int OT = Convert.ToInt32(txtOT.Text) - 1;
-            //    int DO = Convert.ToInt32(txtDO.Text);
-            //    lu1 = MaterialList.Skip(OT).Take(DO - OT).ToList();
-            //}
-            //catch
-            //{
-            //    //ничего не надо делать, если этот фильтр не применен
-            //}
-            //if (SearchTextBox.Text != "")
-            //{
-            //    lu1 = lu1.Where(x => x.Title.Contains(SearchTextBox.Text)).ToList();
-            //}
-            //if (DiscountFilterComboBox.SelectedValue != null)
-            //{
-
-            //    lu1 = lu1.Where(x => x.MaterialTypeID == (int)DiscountFilterComboBox.SelectedValue).ToList();
-
-            //}
-            //MainDataGrid.ItemsSource = lu1;
-        }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-
+            var SelectedService = MainDataGrid.SelectedItem as Material;
+            var EditServiceWindow = new MaterialWindow(SelectedService);
+            if ((bool)EditServiceWindow.ShowDialog())
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs("ServiceList"));
+            }
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-
+            var item = MainDataGrid.SelectedItem as Material;
+            if (item.Supplier.Count > 0)
+            {
+                MessageBox.Show("Нельзя удалять товар, если есть поставщик этого товара");
+                return;
+            }
+            Core.DB.Material.Remove(item);
+            Core.DB.SaveChanges();
+            MaterialList = Core.DB.Material.ToList();
         }
 
         private void DiscountFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void SortFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
