@@ -75,6 +75,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="class_\Core.cs" />
+    <Compile Include="class_\PageChange.cs" />
     <Compile Include="Material.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

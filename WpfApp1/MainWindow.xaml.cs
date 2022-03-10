@@ -39,11 +39,58 @@ namespace WpfApp1
                 return Cost.ToString("#.##");
             }
         }
+        public string MinCountString
+        {
+            get
+            {
+                return MinCount.ToString("Минимальное Количество: "+"#.##"+" шт");
+            }
+        }
+        public double CountInStockString
+        {
+            get
+            {
+                return Convert.ToDouble(CountInStock);
+            }
+        }
+        public string CountInStockString1
+        {
+            get
+            {
+                return CountInStockString.ToString("Остаток: " + "#.##" + " шт");
+            }
+        }
+        public string MaterialString
+        {
+            get
+            {
+                return MaterialType.Title.ToString() +" | "+ Title.ToString();
+            }
+        }
+        public string SupplierString
+        {
+            get
+            {
+                return Supplier.Count.ToString("#.##");
+            }
+        }
+    }
+    public partial class Supplier
+    {
+        public string SvdfString
+        {
+            get
+            {
+                return Title;
+                //CountInStock
+            }
+        }
     }
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private List<Material> _MaterialList;
-        //PageChange pc = new PageChange();
+        List<Material> _MaterialList;
+        List<Material> lu1;
+        PageChange pc = new PageChange();
         public List<Material> MaterialList
         {
             get
@@ -133,37 +180,51 @@ namespace WpfApp1
             SearchFilter = SearchTextBox.Text;
         }
 
-        private void EditButton_Click(object sender, RoutedEventArgs e)
-        {
-            var SelectedService = MainDataGrid.SelectedItem as Material;
-            var EditServiceWindow = new MaterialWindow(SelectedService);
-            if ((bool)EditServiceWindow.ShowDialog())
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs("ServiceList"));
-            }
-        }
-
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            var item = MainDataGrid.SelectedItem as Material;
-            if (item.Supplier.Count > 0)
+            try
             {
-                MessageBox.Show("Нельзя удалять товар, если есть поставщик этого товара");
-                return;
+                var item = MainGrid.SelectedItem as Material;
+                if (item.Supplier.Count > 0)
+                {
+                    MessageBox.Show("Нельзя удалять товар, если есть поставщик этого товара");
+                    return;
+                }
+                Core.DB.Material.Remove(item);
+                Core.DB.SaveChanges();
+                MaterialList = Core.DB.Material.ToList();
             }
-            Core.DB.Material.Remove(item);
-            Core.DB.SaveChanges();
-            MaterialList = Core.DB.Material.ToList();
-        }
+            catch
+            {
+                MessageBox.Show("Произошла ошибка при удалении!");
+            }
 
+        }
+        public static List<string> ListFiltr = new List<string> { "Наименование", "Цена", "Остаток" };
         private void DiscountFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            var selectedType = DiscountFilterComboBox.SelectedItem as Material;
+            DiscountFilterComboBox.ItemsSource = Core.DB.Material.Where(i => i.MaterialTypeID == selectedType.MaterialType.ID).ToList();
         }
 
         private void SortFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            Core.materialNews = Core._MaterialLis;
+            if (SortFilterComboBox.SelectedIndex == 1)
+            {
+                 Core.materialNews = Core._MaterialLis;
+            }
 
+        }
+
+        private void MainGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var SelectedService = MainGrid.SelectedItem as Material;
+            var EditServiceWindow = new MaterialWindow(SelectedService);
+            if ((bool)EditServiceWindow.ShowDialog())
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs("MaterialList"));
+            }
         }
     }
 }

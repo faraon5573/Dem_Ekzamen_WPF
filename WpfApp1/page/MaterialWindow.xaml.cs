@@ -61,7 +61,6 @@ namespace WpfApp1.page
                 MessageBox.Show("Количество товара не должно быть отрицательным");
                 return;
             }
-            
 
 
             // если запись новая, то добавляем ее в список
@@ -80,7 +79,7 @@ namespace WpfApp1.page
         private void GetImageButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog GetImageDialog = new OpenFileDialog();
-            GetImageDialog.Filter = "Файлы изображений: (*.png, *.jpg)|*.png;*.jpg";
+            GetImageDialog.Filter = "Файлы изображений: (*.png, *.jpg, *.jpeg)|*.png;*.jpg;*.jpeg";
             GetImageDialog.InitialDirectory = Environment.CurrentDirectory;
             if (GetImageDialog.ShowDialog() == true)
             {

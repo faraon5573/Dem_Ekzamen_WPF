@@ -12,5 +12,9 @@
             <Setter Property="FontFamily" Value="Segoe Print"/>
             <Setter Property="Background" Value="#EAB14D"/>
         </Style>
+        <Style x:Key="Text" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe Print"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
     </Application.Resources>
 </Application>

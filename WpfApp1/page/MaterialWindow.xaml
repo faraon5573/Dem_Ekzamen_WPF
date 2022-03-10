@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1.page"
         mc:Ignorable="d"
-  Title="{Binding WindowName}" MinHeight="450" MinWidth="400" Height="500" Width="600" WindowStyle="None">
+  Title="{Binding WindowName}" MinHeight="450" MinWidth="400" Height="550" Width="600">
     <Window.Resources>
         <BitmapImage x:Key="df" UriSource="/image/picture.png"/>
     </Window.Resources>
