@@ -141,7 +141,6 @@ namespace WpfApp1
                         FilteredMaterialList = FilteredMaterialList.OrderBy(p => p.MinCount);
                         break;
                 }
-
                 return FilteredMaterialList;
             }
             set
@@ -152,7 +151,7 @@ namespace WpfApp1
             }
         }
 
-        public List<MaterialType> MaterialTypesList { get; set; }
+        //public List<MaterialType> MaterialTypesList { get; set; }
         public MainWindow()
         {
 

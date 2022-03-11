@@ -13,7 +13,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -28,7 +27,7 @@
             <TextBlock Text="Черновик" FontSize="24"/>
         </DockPanel>
 
-        <StackPanel Grid.Row="2" VerticalAlignment="Bottom" Margin="5">
+        <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Margin="5">
             <Button Content="Добавить услугу"  Click="AddService_Click"/>
             <Button x:Name="ExitButton" Content="Выход" Click="ExitButton_Click"/>
         </StackPanel>
@@ -36,12 +35,9 @@
 
         <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
             <Label Content="Поиск: " Margin="10,0,0,0" VerticalAlignment="Center"/>
-            <TextBox x:Name="SearchTextBox" KeyUp="SearchTextBox_KeyUp" Width="200"/>
+            <TextBox x:Name="SearchTextBox" KeyUp="SearchTextBox_KeyUp" Width="300"/>
             <Label Content="Сортировка " Margin="10,0,0,0" VerticalAlignment="Center"/>
-            <ComboBox Name="SortFilterComboBox" SelectedIndex="0" SelectionChanged="SortFilterComboBox_SelectionChanged" ItemsSource="{Binding ListSort}" Width="200"/>
-            <!--<Label Content="Цена: "/>
-            <RadioButton GroupName="Price" Tag="1" Content="по возрастанию" IsChecked="True" Checked="RadioButton_Checked" VerticalContentAlignment="Center"/>
-            <RadioButton GroupName="Price" Tag="2" Content="по убыванию"  Checked="RadioButton_Checked" VerticalContentAlignment="Center"/>-->
+            <ComboBox Name="SortFilterComboBox" SelectedIndex="0" SelectionChanged="SortFilterComboBox_SelectionChanged" ItemsSource="{Binding ListSort}" Width="250"/>
             <Label Content="Фильтр по материалам: " Margin="10,0,0,0" VerticalAlignment="Center"/>
             <ComboBox Name="MaterialFilterComboBox" SelectedIndex="0" SelectionChanged="MaterialFilterComboBox_SelectionChanged" ItemsSource="{Binding ListMaterials}" Width="100"/>
         </StackPanel>
@@ -67,37 +63,28 @@
             <ListView.ItemTemplate >
                 <DataTemplate>
                     <Border x:Name="BorderMain"  BorderThickness="1" BorderBrush="Black" CornerRadius="5">
-                        <Grid x:Name="GridMain">
-                            <Grid Margin="10" HorizontalAlignment="Stretch">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="64"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
-                            </Grid>
-                            <StackPanel Orientation="Horizontal">
-                                <StackPanel>
-                                    <Image x:Name="UserImage" Width="150" Height="150" Source="{Binding ImageUri, TargetNullValue={StaticResource df}}"/>
-                                </StackPanel>
-                                <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical">
-                                    <TextBlock Text="{Binding MaterialString}" Style="{StaticResource Text}"/>
-                                    <TextBlock Text="{Binding MinCountString}" Style="{StaticResource Text}"/>
-                                    <TextBlock Text="{Binding SupplierString}" Style="{StaticResource Text}"/>
-                                </StackPanel>
-
-                                <StackPanel Grid.Column="2" Margin="10" HorizontalAlignment="Right" Orientation="Vertical">
-                                    <TextBlock Text="{Binding CountInStockString1}" Style="{StaticResource Text}"/>
-                                    <Button Content="Удалить" Name="DeleteButton" Click="DeleteButton_Click"/>
-                                </StackPanel>
+                        <Grid x:Name="GridMain" Margin="10" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <Image x:Name="UserImage" Width="100" Height="100" Source="{Binding ImageUri, TargetNullValue={StaticResource df}}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding MaterialString}" Style="{StaticResource Text}"/>
+                                <TextBlock Text="{Binding MinCountString}" Style="{StaticResource Text}"/>
+                                <TextBlock Text="{Binding SupplierString}" Style="{StaticResource Text}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="3" Margin="10" HorizontalAlignment="Right" Orientation="Vertical">
+                                <TextBlock Text="{Binding CountInStockString1}" Style="{StaticResource Text}"/>
+                                <Button Content="Удалить" Name="DeleteButton" Click="DeleteButton_Click"/>
                             </StackPanel>
                         </Grid>
                     </Border>
                 </DataTemplate>
             </ListView.ItemTemplate>
-        </ListView>
-        <ListView Grid.Row="2" Grid.Column="1">
-
-           
         </ListView>
         <!--<DataGrid x:Name="MainDataGrid" Grid.Column="2" Grid.Row="2" CanUserAddRows="false" AutoGenerateColumns="False" CanUserSortColumns="False" CanUserDeleteRows="False" ItemsSource="{Binding MaterialList}">
             <DataGrid.Columns>
