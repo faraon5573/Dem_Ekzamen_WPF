@@ -75,37 +75,45 @@ namespace WpfApp1
             }
         }
     }
-    public partial class Supplier
-    {
-        public string SvdfString
-        {
-            get
-            {
-                return Title;
-                //CountInStock
-            }
-        }
-    }
+    //public partial class Supplier
+    //{
+    //    public string SvdfString
+    //    {
+    //        get
+    //        {
+    //            return Title;
+    //            //CountInStock
+    //        }
+    //    }
+    //}
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         List<Material> _MaterialList;
-        List<Material> lu1;
         PageChange pc = new PageChange();
         public List<Material> MaterialList
         {
             get
             {
-                var FilteredServiceList = _MaterialList;
+                var FilteredMaterialList = _MaterialList;
 
                 if (SearchFilter != "")
-                    FilteredServiceList = FilteredServiceList.Where(item =>
+                    FilteredMaterialList = FilteredMaterialList.Where(item =>
                         item.Title.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) != -1 ||
                         item.Title.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) != -1).ToList();
 
+                if (FilterItems != null)
+                    FilteredMaterialList = FilteredMaterialList.Where(item =>
+                       item.MaterialType.Title.IndexOf(FilterItems, StringComparison.OrdinalIgnoreCase) != -1).ToList();
+                //FilteredMaterialList = FilteredMaterialList.Where(item =>
+                //    item.MaterialType.Title.IndexOf(FilterItems, StringComparison.OrdinalIgnoreCase) != -1).ToList();
+
                 if (SortCost)
-                    return FilteredServiceList.OrderBy(item => Double.Parse(item.CostString)).ToList();
+                    return FilteredMaterialList.OrderBy(item => Double.Parse(item.CostString)).ToList();
                 else
-                    return FilteredServiceList.OrderByDescending(item => Double.Parse(item.CostString)).ToList();
+                    return FilteredMaterialList.OrderByDescending(item => Double.Parse(item.CostString)).ToList();
+
+
+
             }
             set
             {
@@ -114,11 +122,39 @@ namespace WpfApp1
                     PropertyChanged(this, new PropertyChangedEventArgs("MaterialList"));
             }
         }
+        //private IEnumerable<Material> _MaterialList1;
+        //public IEnumerable<Material> MaterialList1
+        //{
+        //    get
+        //    {
+        //        var Result = _MaterialList1;
+        //        if (MaterialFilterList > 0)
+        //            Result = Result.Where(p => p.MaterialType.ID == MaterialFilterList);
+
+        //        return Result;
+        //    }
+        //    set
+        //    {
+        //        _MaterialList1 = value;
+        //        if (PropertyChanged != null)
+        //            PropertyChanged(this, new PropertyChangedEventArgs("MateriaTypelList"));
+        //    }
+        //}
+
+        public List<MaterialType> MaterialTypesList { get; set; }
         public MainWindow()
         {
             this.DataContext = this;
             MaterialList = Core.DB.Material.ToList();
             InitializeComponent();
+
+            for (byte i = 0; i < ListMaterials.Count; i++)
+            {
+                MaterialFilterComboBox.Items.Add(ListMaterials[i]);
+            }
+
+            //MaterialTypesList = Core.DB.MaterialType.ToList();
+            //MaterialTypesList.Insert(0, new MaterialType { Title = "Все типы" });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -158,7 +194,7 @@ namespace WpfApp1
         {
             SortCost = (sender as RadioButton).Tag.ToString() == "1";
         }
-       
+
         private string _SearchFilter = "";
         public string SearchFilter
         {
@@ -200,20 +236,45 @@ namespace WpfApp1
             }
 
         }
-        public static List<string> ListFiltr = new List<string> { "Наименование", "Цена", "Остаток" };
-        private void DiscountFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+
+        public static List<string> ListMaterials = new List<string> { "Все типы", "Гранулы", "Рулон", "Нарезка", "Пресс" };
+
+        private string _FiltrItems;
+        public string FilterItems
         {
-            var selectedType = DiscountFilterComboBox.SelectedItem as Material;
-            DiscountFilterComboBox.ItemsSource = Core.DB.Material.Where(i => i.MaterialTypeID == selectedType.MaterialType.ID).ToList();
+            get => _FiltrItems;
+            set
+            {
+                _FiltrItems = value;
+
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("MaterialList"));
+                }
+            }
         }
 
+        //private int MaterialFilterList = 0;
+        private void MaterialFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //MaterialFilterList = (MaterialFilterComboBox.SelectedItem as MaterialType).ID;
+            //if (PropertyChanged != null)
+            //    PropertyChanged(this, new PropertyChangedEventArgs("MateriaTypelList"));
+
+            if (MaterialFilterComboBox.SelectedIndex > 0)
+                FilterItems = MaterialFilterComboBox.SelectedItem.ToString();
+            else FilterItems = null;
+
+        }
+
+
+
+
+
+        public static List<string> ListSort = new List<string> { "Нет сортировки", "Наименование", "Остаток" };
         private void SortFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Core.materialNews = Core._MaterialLis;
-            if (SortFilterComboBox.SelectedIndex == 1)
-            {
-                 Core.materialNews = Core._MaterialLis;
-            }
+
 
         }
 

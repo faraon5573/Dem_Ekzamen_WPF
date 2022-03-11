@@ -41,6 +41,11 @@ namespace WpfApp1.page
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            // если запись новая, то добавляем ее в список
+            if (CurrentMaterial.ID == 0)
+                Core.DB.Material.Add(CurrentMaterial);
+
+
             if (CurrentMaterial.Cost <= 0)
             {
                 MessageBox.Show("Стоимость товара должна быть больше нуля");
@@ -61,19 +66,20 @@ namespace WpfApp1.page
                 MessageBox.Show("Количество товара не должно быть отрицательным");
                 return;
             }
+            //else
+            //{
+            //    //Core.DB.SaveChanges();
+            //}
 
-
-            // если запись новая, то добавляем ее в список
-            if (CurrentMaterial.ID == 0)
-                Core.DB.Material.Add(CurrentMaterial);
-
-            // сохранение в БД
-            if (DialogResult != true)
+            try
             {
                 Core.DB.SaveChanges();
-                this.Close();
             }
-
+            catch
+            {
+                MessageBox.Show("Ошибка при сохранении в базе данных!");
+            }
+            DialogResult = true;
         }
 
         private void GetImageButton_Click(object sender, RoutedEventArgs e)
@@ -83,10 +89,10 @@ namespace WpfApp1.page
             GetImageDialog.InitialDirectory = Environment.CurrentDirectory;
             if (GetImageDialog.ShowDialog() == true)
             {
-                CurrentMaterial.Image = GetImageDialog.FileName.Substring(Environment.CurrentDirectory.Length + 1);
+                CurrentMaterial.Image = GetImageDialog.FileName.Substring(Environment.CurrentDirectory.Length);
                 if (PropertyChanged != null)
                 {
-                    PropertyChanged(this, new PropertyChangedEventArgs("CurrentService"));
+                    PropertyChanged(this, new PropertyChangedEventArgs("CurrentMaterial"));
                 }
             }
         }
