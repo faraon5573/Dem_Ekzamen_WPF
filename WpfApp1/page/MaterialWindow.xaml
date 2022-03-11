@@ -21,7 +21,7 @@
             <Label Content="Название"/>
             <TextBox Text="{Binding CurrentMaterial.Title}"/>
             <Label Content="Материал"/>
-            <TextBox Text="{Binding CurrentMaterial.MaterialType.Title}"/>
+            <ComboBox Name="MaterialComboBox" SelectedIndex="0" SelectionChanged="MaterialComboBox_SelectionChanged" ItemsSource="{Binding MaterialTypeList }"  SelectedItem="{Binding CurrentMaterial.MaterialType.Title}"/>
             <Label Content="Количество"/>
             <TextBox Text="{Binding CurrentMaterial.CountInPack}"/>
             <Label Content="Единица измерения"/>
@@ -34,8 +34,6 @@
             <TextBox Text="{Binding CurrentMaterial.Cost}"/>
             <Label Content="Описание"/>
             <TextBox Text="{Binding CurrentMaterial.Description}"/>
-
-
 
             <Button Margin="5" x:Name="GetImageButton"  Content="Выберите файл изображения"  Click="GetImageButton_Click"/>
             <Button  Margin="5" x:Name="SaveButton" Content="Сохранить" Click="SaveButton_Click"/>

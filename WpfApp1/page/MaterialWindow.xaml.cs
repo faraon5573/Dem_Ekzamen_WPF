@@ -22,12 +22,34 @@ namespace WpfApp1.page
     /// </summary>
     public partial class MaterialWindow : Window, INotifyPropertyChanged
     {
+        private IEnumerable<Material> _MaterialList;
         public Material CurrentMaterial { get; set; }
+        public List<MaterialType> MaterialTypeList { get; set; }
         public string WindowName
         {
             get
             {
                 return CurrentMaterial.ID == 0 ? "Новая услуга" : "Редактирование услуги";
+            }
+        }
+        public IEnumerable<Material> MaterialList
+        {
+
+            get
+            {
+                var FilteredMaterialList = _MaterialList;
+
+                if (FilterItems != null)
+                    FilteredMaterialList = FilteredMaterialList.Where(item =>
+                       item.MaterialType.Title.IndexOf(FilterItems, StringComparison.OrdinalIgnoreCase) != -1).ToList();
+
+                return FilteredMaterialList;
+            }
+            set
+            {
+                _MaterialList = value;
+                if (PropertyChanged != null)
+                    PropertyChanged(this, new PropertyChangedEventArgs("MaterialList"));
             }
         }
         public MaterialWindow(Material material)
@@ -36,12 +58,40 @@ namespace WpfApp1.page
             CurrentMaterial = material;
             this.DataContext = this;
 
+            for (byte i = 0; i < ListMaterials.Count; i++)
+            {
+                MaterialComboBox.Items.Add(ListMaterials[i]);
+            }
+
         }
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public static List<string> ListMaterials = new List<string> { "Гранулы", "Рулон", "Нарезка", "Пресс" };
+
+        private string _FiltrItems;
+        public string FilterItems
+        {
+            get => _FiltrItems;
+            set
+            {
+                _FiltrItems = value;
+
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("MaterialList"));
+                }
+            }
+        }
+
+        private void MaterialComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (MaterialComboBox.SelectedIndex > 0)
+                FilterItems = MaterialComboBox.SelectedItem.ToString();
+            else FilterItems = null;
+
+        }
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // если запись новая, то добавляем ее в список
             if (CurrentMaterial.ID == 0)
                 Core.DB.Material.Add(CurrentMaterial);
 
@@ -61,23 +111,20 @@ namespace WpfApp1.page
                 MessageBox.Show("Остаток товара не должно быть отрицательным");
                 return;
             }
-            if (CurrentMaterial.CountInPack <= 0)
+            if (CurrentMaterial.CountInPack <= -1)
             {
                 MessageBox.Show("Количество товара не должно быть отрицательным");
                 return;
             }
-            //else
-            //{
-            //    //Core.DB.SaveChanges();
-            //}
 
             try
             {
                 Core.DB.SaveChanges();
             }
-            catch
+            catch 
             {
                 MessageBox.Show("Ошибка при сохранении в базе данных!");
+                return;
             }
             DialogResult = true;
         }

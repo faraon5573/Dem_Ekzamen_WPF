@@ -35,21 +35,33 @@
 
 
         <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <Label Content="Поиск: " Margin="10,0,0,0" VerticalAlignment="Center"/>
+            <TextBox x:Name="SearchTextBox" KeyUp="SearchTextBox_KeyUp" Width="200"/>
             <Label Content="Сортировка " Margin="10,0,0,0" VerticalAlignment="Center"/>
-            <ComboBox Name="SortFilterComboBox" SelectedIndex="0" SelectionChanged="SortFilterComboBox_SelectionChanged" ItemsSource="{Binding ListSort}" />
+            <ComboBox Name="SortFilterComboBox" SelectedIndex="0" SelectionChanged="SortFilterComboBox_SelectionChanged" ItemsSource="{Binding ListSort}" Width="200"/>
             <!--<Label Content="Цена: "/>
             <RadioButton GroupName="Price" Tag="1" Content="по возрастанию" IsChecked="True" Checked="RadioButton_Checked" VerticalContentAlignment="Center"/>
             <RadioButton GroupName="Price" Tag="2" Content="по убыванию"  Checked="RadioButton_Checked" VerticalContentAlignment="Center"/>-->
             <Label Content="Фильтр по материалам: " Margin="10,0,0,0" VerticalAlignment="Center"/>
-            <ComboBox Name="MaterialFilterComboBox" SelectedIndex="0" SelectionChanged="MaterialFilterComboBox_SelectionChanged" ItemsSource="{Binding ListMaterials}" />
-            <Label Content="Поиск: " Margin="10,0,0,0" VerticalAlignment="Center"/>
-            <TextBox x:Name="SearchTextBox" KeyUp="SearchTextBox_KeyUp" Width="200"/>
+            <ComboBox Name="MaterialFilterComboBox" SelectedIndex="0" SelectionChanged="MaterialFilterComboBox_SelectionChanged" ItemsSource="{Binding ListMaterials}" Width="100"/>
         </StackPanel>
 
         <ListView x:Name="MainGrid" Grid.Row="1"  Grid.Column="1" ItemsSource="{Binding MaterialList}" MouseDoubleClick="MainGrid_MouseDoubleClick">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Conter300}" Value="True">
+                            <Setter 
+                                Property="Background" 
+                                Value="#ffba01"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding MinCounter}" Value="True">
+                            <Setter 
+                                Property="Background" 
+                                Value="#f19292"/>
+                        </DataTrigger>
+                    </Style.Triggers>
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate >

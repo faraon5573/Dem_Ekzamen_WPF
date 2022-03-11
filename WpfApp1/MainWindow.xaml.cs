@@ -71,49 +71,78 @@ namespace WpfApp1
         {
             get
             {
-                return Supplier.Count.ToString("#.##");
+                string str = "";
+                foreach(var item in Supplier)
+                {
+                    str += item.Title + " | ";
+                }
+                return ("Поставщики: ") + str;
             }
         }
+        public Boolean Conter300
+        {
+            get
+            {
+                return CountInPack >= (MinCount * 3);
+            }
+        }
+        public Boolean MinCounter
+        {
+            get
+            { 
+                return CountInPack < MinCount;
+            }
+        }
+
     }
-    //public partial class Supplier
-    //{
-    //    public string SvdfString
-    //    {
-    //        get
-    //        {
-    //            return Title;
-    //            //CountInStock
-    //        }
-    //    }
-    //}
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        List<Material> _MaterialList;
+        private IEnumerable<Material> _MaterialList;
         PageChange pc = new PageChange();
-        public List<Material> MaterialList
+        private int SortType = 0;
+
+
+        public IEnumerable<Material> MaterialList
         {
+
             get
             {
                 var FilteredMaterialList = _MaterialList;
 
                 if (SearchFilter != "")
                     FilteredMaterialList = FilteredMaterialList.Where(item =>
-                        item.Title.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) != -1 ||
+                        item.MinCountString.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) != -1 ||
+                        item.CountInStockString1.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) != -1 ||
+                        item.SupplierString.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) != -1 ||
                         item.Title.IndexOf(SearchFilter, StringComparison.OrdinalIgnoreCase) != -1).ToList();
 
                 if (FilterItems != null)
                     FilteredMaterialList = FilteredMaterialList.Where(item =>
                        item.MaterialType.Title.IndexOf(FilterItems, StringComparison.OrdinalIgnoreCase) != -1).ToList();
-                //FilteredMaterialList = FilteredMaterialList.Where(item =>
-                //    item.MaterialType.Title.IndexOf(FilterItems, StringComparison.OrdinalIgnoreCase) != -1).ToList();
 
-                if (SortCost)
-                    return FilteredMaterialList.OrderBy(item => Double.Parse(item.CostString)).ToList();
-                else
-                    return FilteredMaterialList.OrderByDescending(item => Double.Parse(item.CostString)).ToList();
+                switch(SortType)
+                {
+                    case 1:
+                        FilteredMaterialList = FilteredMaterialList.OrderBy(p => p.Title);
+                        break;
+                    case 2:
+                        FilteredMaterialList = FilteredMaterialList.OrderByDescending(p => p.Title);
+                        break;
+                    case 3:
+                        FilteredMaterialList = FilteredMaterialList.OrderByDescending(p => p.CountInStock);
+                        break;
+                    case 4:
+                        FilteredMaterialList = FilteredMaterialList.OrderBy(p => p.CountInStock);
+                        break;
+                    case 5:
+                        FilteredMaterialList = FilteredMaterialList.OrderByDescending(p => p.MinCount);
+                        break;
+                    case 6:
+                        FilteredMaterialList = FilteredMaterialList.OrderBy(p => p.MinCount);
+                        break;
+                }
 
-
-
+                return FilteredMaterialList;
             }
             set
             {
@@ -122,39 +151,23 @@ namespace WpfApp1
                     PropertyChanged(this, new PropertyChangedEventArgs("MaterialList"));
             }
         }
-        //private IEnumerable<Material> _MaterialList1;
-        //public IEnumerable<Material> MaterialList1
-        //{
-        //    get
-        //    {
-        //        var Result = _MaterialList1;
-        //        if (MaterialFilterList > 0)
-        //            Result = Result.Where(p => p.MaterialType.ID == MaterialFilterList);
-
-        //        return Result;
-        //    }
-        //    set
-        //    {
-        //        _MaterialList1 = value;
-        //        if (PropertyChanged != null)
-        //            PropertyChanged(this, new PropertyChangedEventArgs("MateriaTypelList"));
-        //    }
-        //}
 
         public List<MaterialType> MaterialTypesList { get; set; }
         public MainWindow()
         {
+
             this.DataContext = this;
             MaterialList = Core.DB.Material.ToList();
             InitializeComponent();
-
             for (byte i = 0; i < ListMaterials.Count; i++)
             {
                 MaterialFilterComboBox.Items.Add(ListMaterials[i]);
             }
 
-            //MaterialTypesList = Core.DB.MaterialType.ToList();
-            //MaterialTypesList.Insert(0, new MaterialType { Title = "Все типы" });
+            for (byte i = 0; i < ListSort.Count; i++)
+            {
+                SortFilterComboBox.Items.Add(ListSort[i]);
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -175,24 +188,6 @@ namespace WpfApp1
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
-        }
-
-        private Boolean _SortCost = true;
-        public Boolean SortCost
-        {
-            get { return _SortCost; }
-            set
-            {
-                _SortCost = value;
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("MaterialList"));
-                }
-            }
-        }
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
-        {
-            SortCost = (sender as RadioButton).Tag.ToString() == "1";
         }
 
         private string _SearchFilter = "";
@@ -253,36 +248,30 @@ namespace WpfApp1
                 }
             }
         }
-
-        //private int MaterialFilterList = 0;
         private void MaterialFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //MaterialFilterList = (MaterialFilterComboBox.SelectedItem as MaterialType).ID;
-            //if (PropertyChanged != null)
-            //    PropertyChanged(this, new PropertyChangedEventArgs("MateriaTypelList"));
-
             if (MaterialFilterComboBox.SelectedIndex > 0)
                 FilterItems = MaterialFilterComboBox.SelectedItem.ToString();
             else FilterItems = null;
 
         }
 
+        public static List<string> ListSort = new List<string> { "Нет сортировки", "Наименование: А -> Я", "Наименование: Я -> А", "Остаток: убывание", "Остаток: возрастание", "Количество: убывание", "Количество: возрастание" };
 
-
-
-
-        public static List<string> ListSort = new List<string> { "Нет сортировки", "Наименование", "Остаток" };
         private void SortFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
-
+            SortType = SortFilterComboBox.SelectedIndex;
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs("MaterialList"));
+            }
         }
 
         private void MainGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var SelectedService = MainGrid.SelectedItem as Material;
-            var EditServiceWindow = new MaterialWindow(SelectedService);
-            if ((bool)EditServiceWindow.ShowDialog())
+            var SelectedMaterial = MainGrid.SelectedItem as Material;
+            var EditMaterialWindow = new MaterialWindow(SelectedMaterial);
+            if ((bool)EditMaterialWindow.ShowDialog())
             {
                 PropertyChanged(this, new PropertyChangedEventArgs("MaterialList"));
             }
