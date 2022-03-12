@@ -98,7 +98,6 @@ namespace WpfApp1
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private IEnumerable<Material> _MaterialList;
-        PageChange pc = new PageChange();
         private int SortType = 0;
 
 
