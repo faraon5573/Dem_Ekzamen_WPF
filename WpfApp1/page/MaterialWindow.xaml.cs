@@ -22,7 +22,6 @@ namespace WpfApp1.page
     /// </summary>
     public partial class MaterialWindow : Window, INotifyPropertyChanged
     {
-        private IEnumerable<Material> _MaterialList;
         public Material CurrentMaterial { get; set; }
         public List<MaterialType> MaterialTypeList { get; set; }
         public string WindowName
@@ -30,26 +29,6 @@ namespace WpfApp1.page
             get
             {
                 return CurrentMaterial.ID == 0 ? "Новая услуга" : "Редактирование услуги";
-            }
-        }
-        public IEnumerable<Material> MaterialList
-        {
-
-            get
-            {
-                var FilteredMaterialList = _MaterialList;
-
-                if (FilterItems != null)
-                    FilteredMaterialList = FilteredMaterialList.Where(item =>
-                       item.MaterialType.Title.IndexOf(FilterItems, StringComparison.OrdinalIgnoreCase) != -1).ToList();
-
-                return FilteredMaterialList;
-            }
-            set
-            {
-                _MaterialList = value;
-                if (PropertyChanged != null)
-                    PropertyChanged(this, new PropertyChangedEventArgs("MaterialList"));
             }
         }
         public MaterialWindow(Material material)
@@ -92,10 +71,6 @@ namespace WpfApp1.page
         }
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CurrentMaterial.ID == 0)
-                Core.DB.Material.Add(CurrentMaterial);
-
-
             if (CurrentMaterial.Cost <= 0)
             {
                 MessageBox.Show("Стоимость товара должна быть больше нуля");
@@ -116,6 +91,10 @@ namespace WpfApp1.page
                 MessageBox.Show("Количество товара не должно быть отрицательным");
                 return;
             }
+
+
+            if (CurrentMaterial.ID == 0)
+                Core.DB.Material.Add(CurrentMaterial);
 
             try
             {
