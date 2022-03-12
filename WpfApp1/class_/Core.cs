@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace WpfApp1.class_
 {
-    class Core
-    {
-        public static Entities DB = new Entities();
-    }
+        class Core
+        {
+            public static Entities DB = new Entities();
+        }
 }
