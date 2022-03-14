@@ -150,13 +150,14 @@ namespace WpfApp1
             }
         }
 
-        //public List<MaterialType> MaterialTypesList { get; set; }
         public MainWindow()
         {
 
             this.DataContext = this;
             MaterialList = Core.DB.Material.ToList();
             InitializeComponent();
+
+
             for (byte i = 0; i < ListMaterials.Count; i++)
             {
                 MaterialFilterComboBox.Items.Add(ListMaterials[i]);
@@ -173,7 +174,6 @@ namespace WpfApp1
         private void AddService_Click(object sender, RoutedEventArgs e)
         {
             var NewMaterial = new Material();
-
             var NewMaterialWindow = new MaterialWindow(NewMaterial);
             if ((bool)NewMaterialWindow.ShowDialog())
             {
@@ -271,6 +271,7 @@ namespace WpfApp1
             var EditMaterialWindow = new MaterialWindow(SelectedMaterial);
             if ((bool)EditMaterialWindow.ShowDialog())
             {
+                MaterialList = Core.DB.Material.ToList();
                 PropertyChanged(this, new PropertyChangedEventArgs("MaterialList"));
             }
         }
