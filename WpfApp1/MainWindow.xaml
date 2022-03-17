@@ -44,19 +44,11 @@
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Conter300}" Value="True">
-                                <Setter  Property="Background" Value="#ffba01"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding MinCounter}" Value="True">
-                                <Setter Property="Background" Value="#f19292"/>
-                            </DataTrigger>
-                        </Style.Triggers>
                     </Style>
                 </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate >
                     <DataTemplate>
-                        <Border x:Name="BorderMain"  BorderThickness="1" BorderBrush="Black" CornerRadius="5">
+                        <Border x:Name="BorderMain"  BorderThickness="1" BorderBrush="Black" CornerRadius="5" Background="{Binding Background}">
                             <Grid x:Name="GridMain" Margin="10" HorizontalAlignment="Stretch">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="100"/>

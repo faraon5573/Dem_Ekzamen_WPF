@@ -85,18 +85,19 @@ namespace WpfApp1
                 return ("Поставщики: ") + str;
             }
         }
-        public Boolean Conter300
+        public string Background
         {
             get
             {
-                return CountInStock >= (MinCount * 3);
-            }
-        }
-        public Boolean MinCounter
-        {
-            get
-            { 
-                return CountInStock < MinCount;
+                if(CountInStock >= (MinCount * 3))
+                {
+                    return "#ffba01";
+                }
+                else if(CountInStock < MinCount)
+                {
+                    return "#f19292";
+                }
+                return "ffffff";
             }
         }
 
