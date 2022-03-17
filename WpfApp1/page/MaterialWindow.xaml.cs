@@ -29,7 +29,7 @@ namespace WpfApp1.page
         {
             get
             {
-                return CurrentMaterial.ID == 0 ? "Новая услуга" : "Редактирование услуги";
+                return CurrentMaterial.ID == 0 ? "Новый материал" : "Редактирование материала";
             }
         }
         public MaterialWindow(Material material)
