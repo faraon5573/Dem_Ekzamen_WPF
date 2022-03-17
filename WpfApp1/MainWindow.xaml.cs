@@ -83,14 +83,14 @@ namespace WpfApp1
         {
             get
             {
-                return CountInPack >= (MinCount * 3);
+                return CountInStock >= (MinCount * 3);
             }
         }
         public Boolean MinCounter
         {
             get
             { 
-                return CountInPack < MinCount;
+                return CountInStock < MinCount;
             }
         }
 
@@ -103,7 +103,8 @@ namespace WpfApp1
 
         public IEnumerable<Material> MaterialList
         {
-
+            //get { return _MaterialList; }
+            //set { _MaterialList = value; }
             get
             {
                 var FilteredMaterialList = _MaterialList;
@@ -119,7 +120,7 @@ namespace WpfApp1
                     FilteredMaterialList = FilteredMaterialList.Where(item =>
                        item.MaterialType.Title.IndexOf(FilterItems, StringComparison.OrdinalIgnoreCase) != -1).ToList();
 
-                switch(SortType)
+                switch (SortType)
                 {
                     case 1:
                         FilteredMaterialList = FilteredMaterialList.OrderBy(p => p.Title);
@@ -178,8 +179,7 @@ namespace WpfApp1
             if ((bool)NewMaterialWindow.ShowDialog())
             {
                 MaterialList = Core.DB.Material.ToList();
-                PropertyChanged(this, new PropertyChangedEventArgs("FilteredProductsPrice"));
-                PropertyChanged(this, new PropertyChangedEventArgs("ProductsPrice"));
+                PropertyChanged(this, new PropertyChangedEventArgs("MaterialList"));
             }
         }
 
@@ -211,21 +211,25 @@ namespace WpfApp1
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (MessageBox.Show("Ты уверен?", "", MessageBoxButton.YesNo, MessageBoxImage.Question)== MessageBoxResult.Yes)
             {
-                var item = MainGrid.SelectedItem as Material;
-                if (item.Supplier.Count > 0)
+                try
                 {
-                    MessageBox.Show("Нельзя удалять товар, если есть поставщик этого товара");
-                    return;
+                    var item = MainGrid.SelectedItem as Material;
+                    if (item.Supplier.Count > 0)
+                    {
+                        MessageBox.Show("Нельзя удалять товар, если есть поставщик этого товара");
+                        return;
+                    }
+                    Core.DB.Material.Remove(item);
+                    Core.DB.SaveChanges();
+                    MaterialList = Core.DB.Material.ToList();
                 }
-                Core.DB.Material.Remove(item);
-                Core.DB.SaveChanges();
-                MaterialList = Core.DB.Material.ToList();
-            }
-            catch
-            {
-                MessageBox.Show("Произошла ошибка при удалении!");
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Произошла ошибка при удалении!");
+                }
+
             }
 
         }

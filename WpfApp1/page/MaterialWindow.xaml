@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1.page"
         mc:Ignorable="d"
-  Title="{Binding WindowName}" Height="650" Width="600" MinHeight="650" MinWidth="600" MaxHeight="750" MaxWidth="700">
+  Title="{Binding WindowName}" Height="650" Width="600" MinHeight="650" MinWidth="600" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <BitmapImage x:Key="df" UriSource="/image/picture.png"/>
+        
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -21,8 +22,19 @@
             <Label Content="Название"/>
             <TextBox Text="{Binding CurrentMaterial.Title}"/>
             <Label Content="Материал"/>
-            <ComboBox Name="MaterialComboBox" SelectedIndex="0" SelectionChanged="MaterialComboBox_SelectionChanged" ItemsSource="{Binding MaterialTypeList}"  SelectedItem="{Binding CurrentMaterial.MaterialType.Title}"/>
-            <Label Content="Количество"/>
+            <ComboBox Name="MaterialComboBox" 
+                      ItemsSource="{Binding CurrentMaterialType}"
+                      SelectedItem="{Binding CurrentMaterial.MaterialType}">                
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <Label Content="{Binding Title}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+       
+                      
+            
+            <Label Content="Количество в упаковке"/>
             <TextBox Text="{Binding CurrentMaterial.CountInPack}"/>
             <Label Content="Единица измерения"/>
             <TextBox Text="{Binding CurrentMaterial.Unit}"/>
@@ -36,7 +48,7 @@
             <TextBox Text="{Binding CurrentMaterial.Description}" Height="150" TextWrapping="Wrap" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 
             <Button Margin="5" x:Name="GetImageButton"  Content="Выберите файл изображения"  Click="GetImageButton_Click"/>
-            <Button  Margin="5" x:Name="SaveButton" Content="Сохранить" Click="SaveButton_Click"/>
+            <Button  Margin="5" x:Name="SaveButton" Content="Сохранить" Click="SaveButton_Click"  IsDefault="True"/>
         </StackPanel>
     </Grid>
 </Window>

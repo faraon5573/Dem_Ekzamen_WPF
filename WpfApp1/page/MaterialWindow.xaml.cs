@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,7 @@ namespace WpfApp1.page
     public partial class MaterialWindow : Window, INotifyPropertyChanged
     {
         public Material CurrentMaterial { get; set; }
-        public List<MaterialType> MaterialTypeList { get; set; }
+        public List<MaterialType> CurrentMaterialType { get; set; }
         public string WindowName
         {
             get
@@ -32,43 +33,16 @@ namespace WpfApp1.page
             }
         }
         public MaterialWindow(Material material)
-        {
+        {   
             InitializeComponent();
             CurrentMaterial = material;
             this.DataContext = this;
 
-            for (byte i = 0; i < ListMaterials.Count; i++)
-            {
-                MaterialComboBox.Items.Add(ListMaterials[i]);
-            }
+            CurrentMaterialType = Core.DB.MaterialType.ToList();
 
         }
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public static List<string> ListMaterials = new List<string> { "Гранулы", "Рулон", "Нарезка", "Пресс" };
-
-        private string _FiltrItems;
-        public string FilterItems
-        {
-            get => _FiltrItems;
-            set
-            {
-                _FiltrItems = value;
-
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(this, new PropertyChangedEventArgs("MaterialList"));
-                }
-            }
-        }
-
-        private void MaterialComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (MaterialComboBox.SelectedIndex > 0)
-                FilterItems = MaterialComboBox.SelectedItem.ToString();
-            else FilterItems = null;
-
-        }
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             if (CurrentMaterial.Cost <= 0)
