@@ -6,17 +6,14 @@
         xmlns:local="clr-namespace:WpfApp1.page"
         mc:Ignorable="d"
   Title="{Binding WindowName}" Height="700" Width="600" MinHeight="700" MinWidth="600" WindowStartupLocation="CenterScreen">
-    <Window.Resources>
-        <BitmapImage x:Key="df" UriSource="/image/picture.png"/>
-        
-    </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="350"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <Image Source="{Binding CurrentMaterial.ImageUri, TargetNullValue={StaticResource df}}" />
+        <Image Source="{Binding CurrentMaterial.ImageUri}" />
 
         <StackPanel Grid.Column="1" Margin="5" Grid.ColumnSpan="2">
             <Label Content="Название"/>

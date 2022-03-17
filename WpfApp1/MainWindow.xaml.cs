@@ -24,12 +24,18 @@ namespace WpfApp1
 
     public partial class Material
     {
-        public Uri ImageUri
+        public string ImageUri
         {
             get
             {
-                var imageName = Environment.CurrentDirectory + (Image ?? "");
-                return System.IO.File.Exists(imageName) ? new Uri(imageName) :null;
+                if(Image == null)
+                {
+                    return "\\image\\picture.png";
+                }
+                else
+                {
+                    return Image;
+                }
             }
         }
         public string CostString

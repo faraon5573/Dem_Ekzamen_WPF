@@ -6,126 +6,79 @@
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
         Title="Черновик" MinHeight="450" MinWidth="800" WindowStartupLocation="CenterScreen" WindowState="Maximized">
-    <Window.Resources>
-        <BitmapImage x:Key="df" UriSource="./image/picture.png"/>
-    </Window.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
-            <RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="130"/>
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
 
-        <DockPanel Grid.ColumnSpan="1" LastChildFill="True">
-            <Image x:Name="Logo" Source="./image/Черновик.png" />
-        </DockPanel>
-        <DockPanel Grid.Row="1" LastChildFill="True">
-            <TextBlock Text="Черновик" FontSize="24"/>
+        <DockPanel VerticalAlignment="Top">
+            <Image x:Name="Logo" 
+                   Source="./image/Черновик.png" />
         </DockPanel>
 
-        <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Margin="5">
+        <StackPanel VerticalAlignment="Bottom" Margin="5">
             <Button Content="Добавить услугу"  Click="AddService_Click"/>
             <Button x:Name="ExitButton" Content="Выход" Click="ExitButton_Click"/>
         </StackPanel>
 
-        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-            <Label Content="Поиск: " Margin="10,0,0,0" VerticalAlignment="Center"/>
-            <TextBox x:Name="SearchTextBox" KeyUp="SearchTextBox_KeyUp" Width="300"/>
-            <Label Content="Сортировка " Margin="10,0,0,0" VerticalAlignment="Center"/>
-            <ComboBox Name="SortFilterComboBox" SelectedIndex="0" SelectionChanged="SortFilterComboBox_SelectionChanged" ItemsSource="{Binding ListSort}" Width="250"/>
-            <Label Content="Фильтр по материалам: " Margin="10,0,0,0" VerticalAlignment="Center"/>
-            <ComboBox Name="MaterialFilterComboBox" SelectedIndex="0" SelectionChanged="MaterialFilterComboBox_SelectionChanged" ItemsSource="{Binding ListMaterials}" Width="100"/>
+        <Grid Grid.Column="1" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Label Content="Поиск: " Margin="10,0,0,0" VerticalAlignment="Center"/>
+                <TextBox x:Name="SearchTextBox" KeyUp="SearchTextBox_KeyUp" Width="300"/>
+                <Label Content="Сортировка " Margin="10,0,0,0" VerticalAlignment="Center"/>
+                <ComboBox Name="SortFilterComboBox" SelectedIndex="0" SelectionChanged="SortFilterComboBox_SelectionChanged" ItemsSource="{Binding ListSort}" Width="250"/>
+                <Label Content="Фильтр по материалам: " Margin="10,0,0,0" VerticalAlignment="Center"/>
+                <ComboBox Name="MaterialFilterComboBox" SelectedIndex="0" SelectionChanged="MaterialFilterComboBox_SelectionChanged" ItemsSource="{Binding ListMaterials}" Width="100"/>
 
-            <Label Content="Количество выведенных данных : " Margin="10,0,0,0" VerticalAlignment="Center"/>
-            <Label x:Name="Label_CountNow"/>
-            <Label Content=" из "/>
-            <Label x:Name="Label_Count"/>
-        </StackPanel>
-
-        <ListView x:Name="MainGrid" Grid.Row="1"  Grid.Column="1" ItemsSource="{Binding MaterialList}" MouseDoubleClick="MainGrid_MouseDoubleClick" ScrollViewer.CanContentScroll="False">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Conter300}" Value="True">
-                            <Setter  Property="Background" Value="#ffba01"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding MinCounter}" Value="True">
-                            <Setter Property="Background" Value="#f19292"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.ItemTemplate >
-                <DataTemplate>
-                    <Border x:Name="BorderMain"  BorderThickness="1" BorderBrush="Black" CornerRadius="5">
-                        <Grid x:Name="GridMain" Margin="10" HorizontalAlignment="Stretch">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="100"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel>
-                                <Image x:Name="UserImage" Width="100" Height="100" Source="{Binding ImageUri, TargetNullValue={StaticResource df}}"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical" HorizontalAlignment="Left">
-                                <TextBlock Text="{Binding MaterialString}" Style="{StaticResource Text}"/>
-                                <TextBlock Text="{Binding MinCountString}" Style="{StaticResource Text}"/>
-                                <TextBlock Text="{Binding SupplierString}" Style="{StaticResource Text}"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="3" Margin="10" HorizontalAlignment="Right" Orientation="Vertical" Width="200">
-                                <TextBlock Text="{Binding CountInStockString1}" Style="{StaticResource Text}"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <!--<StackPanel Grid.Row="2"  Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5">
-            <TextBox Name="txtPageCount" TextChanged="txtPageCount_TextChanged" Visibility="Hidden"/>
-            <TextBlock Name="txtCurrentPage" />
-            <TextBlock Name="txtPrev" Uid="prev" Text=" &#60; " MouseDown="GoPage_MouseDown"/>
-            <TextBlock Name="txt1" Uid="1" Text="{Binding  Path = NPage[0], StringFormat={}{0,3}}" Visibility="{Binding Visible[0]}" FontWeight="{Binding Bold[0]}" MouseDown="GoPage_MouseDown"/>
-            <TextBlock Name="txt2" Uid="2" Text="{Binding  Path = NPage[1], StringFormat={}{0,3}}" Visibility="{Binding Visible[1]}" FontWeight="{Binding Bold[1]}" MouseDown="GoPage_MouseDown"/>
-            <TextBlock Name="txt3" Uid="3" Text="{Binding  Path = NPage[2], StringFormat={}{0,3}}" Visibility="{Binding Visible[2]}" FontWeight="{Binding Bold[2]}" MouseDown="GoPage_MouseDown"/>
-            <TextBlock Name="txt4" Uid="4" Text="{Binding  Path = NPage[3], StringFormat={}{0,3}}" Visibility="{Binding Visible[3]}" FontWeight="{Binding Bold[3]}" MouseDown="GoPage_MouseDown"/>
-            <TextBlock Name="txt5" Uid="5" Text="{Binding  Path = NPage[4], StringFormat={}{0,3}}" Visibility="{Binding Visible[4]}" FontWeight="{Binding Bold[4]}" MouseDown="GoPage_MouseDown"/>
-            <TextBlock Name="txtNext" Uid="next" Text=" &#62;" MouseDown="GoPage_MouseDown"/>
-        </StackPanel>-->
-        
-        
-        <!--<DataGrid x:Name="MainDataGrid" Grid.Column="2" Grid.Row="2" CanUserAddRows="false" AutoGenerateColumns="False" CanUserSortColumns="False" CanUserDeleteRows="False" ItemsSource="{Binding MaterialList}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Width="200" Header="Название" Binding="{Binding Title}"/>
-                <DataGridTemplateColumn Width="100" Header="">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Height="64"  Width="64" Source="{Binding ImageUri, TargetNullValue={StaticResource df}}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn  Width="100" Header="Количество" Binding="{Binding CountInPack}"/>
-                <DataGridTextColumn  Width="40" Header="" Binding="{Binding Unit}"/>
-                <DataGridTextColumn  Width="160" Header="Минимальное количество" Binding="{Binding CountInStock}"/>
-                <DataGridTextColumn  Width="60" Header="Остаток" Binding="{Binding MinCount}"/>
-                <DataGridTextColumn  Width="100" Header="Описание" Binding="{Binding Description}"/>
-                <DataGridTextColumn  Width="100" Header="Цена" Binding="{Binding Cost}"/>
-                <DataGridTextColumn  Width="100" Header="Материал" Binding="{Binding MaterialType.Title}"/>
-                <DataGridTemplateColumn Header="Действия">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel  Visibility="{Binding DataContext.AdminVisibility, ElementName=Root}" Orientation="Horizontal">
-                                <Button Content="Редактировать" Name="EditButton" Click="EditButton_Click"/>
-                                <Button Content="Удалить" Name="DeleteButton" Click="DeleteButton_Click"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>-->
+                <Label Content="Количество выведенных данных : " Margin="10,0,0,0" VerticalAlignment="Center"/>
+                <Label x:Name="Label_CountNow"/>
+                <Label Content=" из "/>
+                <Label x:Name="Label_Count"/>
+            </StackPanel>
+            <ListView x:Name="MainGrid" Grid.Row="1"  Grid.Column="1" ItemsSource="{Binding MaterialList}" MouseDoubleClick="MainGrid_MouseDoubleClick" ScrollViewer.CanContentScroll="False">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Conter300}" Value="True">
+                                <Setter  Property="Background" Value="#ffba01"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding MinCounter}" Value="True">
+                                <Setter Property="Background" Value="#f19292"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate >
+                    <DataTemplate>
+                        <Border x:Name="BorderMain"  BorderThickness="1" BorderBrush="Black" CornerRadius="5">
+                            <Grid x:Name="GridMain" Margin="10" HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <Image x:Name="UserImage" Width="100" Height="100" Source="{Binding ImageUri}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical" HorizontalAlignment="Left">
+                                    <TextBlock Text="{Binding MaterialString}" Style="{StaticResource Text}"/>
+                                    <TextBlock Text="{Binding MinCountString}" Style="{StaticResource Text}"/>
+                                    <TextBlock Text="{Binding SupplierString}" Style="{StaticResource Text}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="3" Margin="10" HorizontalAlignment="Right" Orientation="Vertical" Width="200">
+                                    <TextBlock Text="{Binding CountInStockString1}" Style="{StaticResource Text}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
     </Grid>
 </Window>
