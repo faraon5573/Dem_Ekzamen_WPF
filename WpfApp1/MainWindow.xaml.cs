@@ -97,7 +97,7 @@ namespace WpfApp1
                 {
                     return "#f19292";
                 }
-                return "ffffff";
+                return "#ffffff";
             }
         }
 
