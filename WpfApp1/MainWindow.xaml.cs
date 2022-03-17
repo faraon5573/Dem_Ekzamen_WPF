@@ -209,31 +209,6 @@ namespace WpfApp1
             SearchFilter = SearchTextBox.Text;
         }
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (MessageBox.Show("Ты уверен?", "", MessageBoxButton.YesNo, MessageBoxImage.Question)== MessageBoxResult.Yes)
-            {
-                try
-                {
-                    var item = MainGrid.SelectedItem as Material;
-                    if (item.Supplier.Count > 0)
-                    {
-                        MessageBox.Show("Нельзя удалять товар, если есть поставщик этого товара");
-                        return;
-                    }
-                    Core.DB.Material.Remove(item);
-                    Core.DB.SaveChanges();
-                    MaterialList = Core.DB.Material.ToList();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Произошла ошибка при удалении!");
-                }
-
-            }
-
-        }
-
         public static List<string> ListMaterials = new List<string> { "Все типы", "Гранулы", "Рулон", "Нарезка", "Пресс" };
 
         private string _FiltrItems;

@@ -178,7 +178,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Properties\material_2.jpeg" />
     <Resource Include="Черновик.ico" />
     <Resource Include="image\Черновик.png" />
     <Resource Include="image\picture.png" />

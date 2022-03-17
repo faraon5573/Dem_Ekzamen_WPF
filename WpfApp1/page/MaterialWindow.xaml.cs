@@ -96,5 +96,27 @@ namespace WpfApp1.page
                 }
             }
         }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Ты уверен?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    if (CurrentMaterial.Supplier.Count > 0)
+                    {
+                        MessageBox.Show("Нельзя удалять товар, если есть поставщик этого товара");
+                        return;
+                    }
+                    Core.DB.Material.Remove(CurrentMaterial);
+                    Core.DB.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Произошла ошибка при удалении!");
+                }
+                DialogResult = true;
+            }
+        }
     }
 }
