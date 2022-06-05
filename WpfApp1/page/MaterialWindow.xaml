@@ -9,11 +9,11 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="350"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <Image Source="{Binding CurrentMaterial.ImageUri}" />
+        <Image Source="{Binding CurrentMaterial.ImageUri}" Width="350"/>
 
         <StackPanel Grid.Column="1" Margin="5" Grid.ColumnSpan="2">
             <Label Content="Название"/>
